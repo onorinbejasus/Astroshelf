@@ -1,0 +1,14 @@
+<?php
+
+
+	// Set header to HTML if you want to be able to print out stats and debug info
+	//header("Content-type: text/html");
+	
+	// Set header to png if you just want the returned image to show up
+	header("Content-type: image/gif");
+
+	$size = min($_GET['width'], $_GET['height']) * 1.8;
+	//echo $size;
+	$im = imagecreatefromgif("http://third.ucllnl.org/cgi-bin/firstimage?RA=".$_GET['ra']."&Dec=".$_GET['dec']."&Equinox=J2000&ImageSize=".$size."&MaxInt=10");
+	echo $im;
+?>
