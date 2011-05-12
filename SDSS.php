@@ -19,7 +19,7 @@
 	{
 		header("Content-type: image/jpeg");
 		// Submit query to some database and store results in xml format
-		$xml = simplexml_load_file("http://casjobs.sdss.org/ImgCutoutDR6/getjpeg?ra_=".$_GET['ra']."&dec_=".$_GET['dec']."&scale_=".$_GET['scale']."&width_=".$_GET['width']."&height_=".$_GET['height']."&opt_=&imgtype_=&imgfield_=");
+		$xml = simplexml_load_file("http://casjobs.sdss.org/ImgCutoutDR6/getjpeg.aspx?ra_=".$_GET['ra']."&dec_=".$_GET['dec']."&scale_=".$_GET['scale']."&width_=".$_GET['width']."&height_=".$_GET['height']."&opt_=&imgtype_=&imgfield_=");
 		//echo $xml;
 		$im = base64_decode($xml);
 		echo $im;
