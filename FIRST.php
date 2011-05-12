@@ -63,16 +63,16 @@
 		//Determine the size for the query to FIRST.  Basically converting pixels to arcminutes.
 		$size = $dim2*3 / 100;
 		//Get the FIRST image
-		$im = imagecreatefromgif("http://third.ucllnl.org/cgi-bin/firstimage?RA=".($_GET['ra']/15)."&Dec=".$_GET['dec']."&Equinox=J2000&ImageSize=".$size."&MaxInt=10");
+		$im = /*imagecreatefromjpeg("TEST.jpg"); */ imagecreatefromgif("http://third.ucllnl.org/cgi-bin/firstimage?RA=".($_GET['ra']/15)."&Dec=+".$_GET['dec']."&Equinox=J2000&ImageSize=".$size."&MaxInt=10"); 
 		//Create a blank image to store the crop
 		$im2 = imagecreatetruecolor($dim, $dim);
 		//Crop extra data and resize in one step
 		imagecopyresampled($im2, $im, 0, 0, $xoffset, $yoffset, $dim, $dim, $dim2, $dim2);
 		//Uncomment this line to see the image with data
-		//imagejpeg($im);
+//		imagejpeg($im);
 		imagedestroy($im);
 		//Show the image
-		imagejpeg($im2);
+		imagegif($im2);
 		imagedestroy($im2);
 	}
 ?>

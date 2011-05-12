@@ -262,7 +262,7 @@ function updateView()
 	var scale = (fov*3600.0)/width;
 	//var url = "SDSS.php?ra=" + ((360 - rotateX)) + "&dec=" + ((rotateY-180)) + "&scale=" + scale + "&width=" + Math.floor(((6.0*fov)*scale*15.0)) + "&height=" + Math.floor(((4.0*fov)*scale*15.0));
 	var url = "SDSS.php?ra=" + ((360 - rotateX)) + "&dec=" + ((rotateY-180)) + "&scale=" + scale + "&width=" + width + "&height=" + width;
-	var urlB = "FIRST.php?ra=" + ((360 - rotateX)) + "&dec=" + ((rotateY-180)) + "&scale=" + 1.8 + "&width=" + (2.0*fov*60.0)/scale + "&height=" + (2.0*fov*60.0)/scale;
+	var urlB = "FIRST.php?ra=" + ((360 - rotateX)) + "&dec=" + ((rotateY-180)) + "&scale=" + scale + "&width=" + (2.0*fov*60.0)/scale + "&height=" + (2.0*fov*60.0)/scale;
 	SDSStexture = loadImageTexture(gl, url);
 	FIRSTtexture = loadImageTexture(gl, urlB);
 	
