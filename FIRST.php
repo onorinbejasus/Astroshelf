@@ -29,27 +29,27 @@
 		if($dim <= 256)
 		{
 			$dim = 256;
-			$xoffset = 48;
-			$yoffset = 15;
+			$xoffset = 50;
+			$yoffset = 16;
 		}
 		else if($dim <= 666)
 		{
-			$xoffset = 48;
-			$yoffset = 15;
+			$xoffset = 54;
+			$yoffset = 16;
 		}
 		else if($dim <= 1024)
 		{
-			$xoffset = 53;
+			$xoffset = 54;
 			$yoffset = 15;
 		}
 		else
 		{
 			$dim = 1024;
-			$xoffset = 53;
+			$xoffset = 54;
 			$yoffset = 15;
 		}
 		//Since FIRST does not scale images, we will *try*
-		$scale = $_GET['scale']/1.8;
+		/*$scale = $_GET['scale']/60;
 		if($scale < 1)
 		{
 			$scale = 1;
@@ -60,19 +60,24 @@
 		{
 			$dim2 = 1024;
 		}
+*/
 		//Determine the size for the query to FIRST.  Basically converting pixels to arcminutes.
-		$size = $dim2*3 / 100;
+		//$size = $dim2*3 / 100;
+		//$size = ($dim*1.8)/60;
+		$size = ($_GET['scale']*1.8*$dim)/60;
+		if ($size > 30) $size = 30;
 		//Get the FIRST image
 		$im = /*imagecreatefromjpeg("TEST.jpg"); */ imagecreatefromgif("http://third.ucllnl.org/cgi-bin/firstimage?RA=".($_GET['ra']/15)."&Dec=+".$_GET['dec']."&Equinox=J2000&ImageSize=".$size."&MaxInt=10"); 
 		//Create a blank image to store the crop
 		$im2 = imagecreatetruecolor($dim, $dim);
 		//Crop extra data and resize in one step
+		$dim2 = ($size*60)/1.8;
 		imagecopyresampled($im2, $im, 0, 0, $xoffset, $yoffset, $dim, $dim, $dim2, $dim2);
 		//Uncomment this line to see the image with data
 //		imagejpeg($im);
 		imagedestroy($im);
 		//Show the image
 		imagegif($im2);
-		imagedestroy($im2);
+		imagedestroy($im);
 	}
 ?>

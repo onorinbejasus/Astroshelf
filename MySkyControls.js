@@ -262,10 +262,10 @@ function updateView()
 	var scale = (fov*3600.0)/width;
 	//var url = "SDSS.php?ra=" + ((360 - rotateX)) + "&dec=" + ((rotateY-180)) + "&scale=" + scale + "&width=" + Math.floor(((6.0*fov)*scale*15.0)) + "&height=" + Math.floor(((4.0*fov)*scale*15.0));
 	var url = "SDSS.php?ra=" + ((360 - rotateX)) + "&dec=" + ((rotateY-180)) + "&scale=" + scale + "&width=" + width + "&height=" + width;
-	var urlB = "FIRST.php?ra=" + ((360 - rotateX)) + "&dec=" + ((rotateY-180)) + "&scale=" + scale + "&width=" + (2.0*fov*60.0)/scale + "&height=" + (2.0*fov*60.0)/scale;
+	var urlB = "FIRST.php?ra=" + ((360 - rotateX)) + "&dec=" + ((rotateY-180)) + "&scale=" + scale + "&width=" + width + "&height=" + width;
 	SDSStexture = loadImageTexture(gl, url);
 	FIRSTtexture = loadImageTexture(gl, urlB);
-	
+	document.getElementById('xyz').innerHTML = scale;	
 	oldWest = (360 - rotateX) - fov;
 	oldEast = (360 - rotateX) + fov;
 	oldNorth = (rotateY-180) + fov;
@@ -416,7 +416,8 @@ function keyPress(event)
 		if(fov < 100)
 		{
 			fov = fov + 1;
-			if((fov < 15) && (fov > 5)) updateView();
+			//if((fov < 15) && (fov > 5)) updateView();
+			updateView();
 			//console.log("Zooming out: fov = " + fov);
 		}
 	}
@@ -425,7 +426,8 @@ function keyPress(event)
 		if(fov > 0)
 		{
 			fov = fov - 1;
-			if((fov < 15) && (fov > 5)) updateView();
+			updateView();
+			//if((fov < 15) && (fov > 5)) updateView();
 			//console.log("Zooming out: fov = " + fov);
 		}
 	}

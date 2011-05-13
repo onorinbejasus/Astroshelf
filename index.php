@@ -88,8 +88,8 @@
 		}
 		
 		// Map the FIRST image
-		float firstCoordX = ((texRA*longs*degPerLong) - firstRA)/((firstWidth));
-		float firstCoordY = ((texDec*lats*degPerLat) - (firstDec + ((lats*degPerLat)/2.0)))/((firstHeight));
+		float firstCoordX = sdssCoordX; //((texRA*longs*degPerLong) - firstRA)/((firstWidth));
+		float firstCoordY = sdssCoordY; //((texDec*lats*degPerLat) - (firstDec + ((lats*degPerLat)/2.0)))/((firstHeight));
 		if((firstCoordX >= 0.0) && (firstCoordX <= 1.0))
 		{
 			if((firstCoordY >= 0.0) && (firstCoordY <= 1.0))
@@ -374,7 +374,7 @@
 	
 </div>
 <div id="coordinates">
-	RA: <span id="RA">Awesome!</span> Dec: <span id="Dec">Radical!</span> <span id="xyz"></span>
+	RA: <span id="RA">Awesome!</span> Dec: <span id="Dec">Radical!</span> Scale: <span id="xyz"> Stuff </span>
 </div>
 </body>
  
