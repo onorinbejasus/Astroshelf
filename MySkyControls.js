@@ -16,7 +16,6 @@ function getViewBoundingBox()
 	return retval;
 }
 
-
 function getRADecForScreenPoint(x, y)
 {
 	//console.log("Width: " + x + " Y: " + y);
@@ -24,7 +23,7 @@ function getRADecForScreenPoint(x, y)
 	var dy = tan_fov_div_2 * (1.0 - (y / height_div_2));
 	
 	var proj = new J3DIVector3(x/width, y/height, 1.0);
-	
+
 	//var pMatrix = new J3DIMatrix4();
 	//pMatrix.perspective(fov, width/height, 1, 10000);
 	//pMatrix.invert();
@@ -181,6 +180,45 @@ function updateRADecForPoint(x, y)
 	document.getElementById("RA").innerHTML = (360-rotateX); //currentRADec.RA;
 }
 
+/* mouse Wheel */
+function handle(delta) {
+	if (delta < 0){
+		
+		console.log("zoom out");
+		
+		if(fov > 0)
+		{
+			fov = fov - 1;
+			updateView();
+		}
+	}
+	
+	else{
+		 console.log("zoom in");
+		if(fov > 0)
+		{
+			fov = fov + 1;
+			updateView();
+		}
+	}
+}
+
+function wheel(event){
+	var delta = 0;
+	if (!event) event = window.event;
+	if (event.wheelDelta) {
+		delta = event.wheelDelta/120; 
+		if (window.opera) delta = -delta;
+	} else if (event.detail) {
+		delta = -event.detail/3;
+	}
+	if (delta)
+		handle(delta);
+        if (event.preventDefault)
+                event.preventDefault();
+        event.returnValue = false;
+}
+
 var mousePressed = false;
 var oldMouseX = 0;
 var oldMouseY = 0;
@@ -307,7 +345,6 @@ function doLoadImageTextureWithBox(ctx, image, texture, box, qNumber)
     document.getElementById(String(qNumber) + "loader").style.opacity = 0.0;
 }
 
-
 function rotateCamera(event)
 {
 	if(mousePressed)
@@ -411,7 +448,7 @@ function keyPress(event)
 	{
 		drawGrid = !drawGrid;
 	}
-	else if(character == "Z")
+	else if(character == "Z" || character == "z")
 	{
 		if(fov < 100)
 		{
@@ -421,7 +458,7 @@ function keyPress(event)
 			//console.log("Zooming out: fov = " + fov);
 		}
 	}
-	else if(character == "X")
+	else if(character == "X" || character == "x")
 	{
 		if(fov > 0)
 		{

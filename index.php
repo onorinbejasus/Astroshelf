@@ -357,7 +357,7 @@
 </head>
  
 <body onload="start()" onkeydown="keyPress(event)">
-<canvas id="skycanvas" onmousedown="pressMouse(event)" onmouseup="releaseMouse(event)" onmouseout="releaseMouse(event)" onmousemove="updateRADec(event); rotateCamera(event)">
+<canvas id="skycanvas" onmousedown="pressMouse(event)" onmouseup="releaseMouse(event)" onmouseout="releaseMouse(event)" onmousemove="updateRADec(event); rotateCamera(event)" onmousewheel="wheel(event)">
     If you're seeing this your web browser doesn't support the &lt;canvas>&gt; element. Ouch!
 </canvas>
 <div id="floaty">
