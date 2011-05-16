@@ -182,11 +182,12 @@ function updateRADecForPoint(x, y)
 
 /* mouse Wheel */
 function handle(delta) {
+	
 	if (delta < 0){
 		
 		console.log("zoom out");
 		
-		if(fov > 0)
+		if(fov >= 0)
 		{
 			fov = fov - 1;
 			updateView();
@@ -195,6 +196,7 @@ function handle(delta) {
 	
 	else{
 		 console.log("zoom in");
+		
 		if(fov > 0)
 		{
 			fov = fov + 1;
@@ -303,7 +305,8 @@ function updateView()
 	var urlB = "FIRST.php?ra=" + ((360 - rotateX)) + "&dec=" + ((rotateY-180)) + "&scale=" + scale + "&width=" + width + "&height=" + width;
 	SDSStexture = loadImageTexture(gl, url);
 	FIRSTtexture = loadImageTexture(gl, urlB);
-	document.getElementById('xyz').innerHTML = scale;	
+	console.log("width: " + width);
+	document.getElementById('xyz').innerHTML = scale;
 	oldWest = (360 - rotateX) - fov;
 	oldEast = (360 - rotateX) + fov;
 	oldNorth = (rotateY-180) + fov;
@@ -411,22 +414,22 @@ function keyPress(event)
 		zooming = true;
 		zoom();
 	}
-	else if(character == "i" || character == "I")
+	else if(event.which == 39) // left arrow
 	{
 		rotateX -= 1.0;
 		updateRADecForPoint(0, 0);
 	}
-	else if(character == "k" || character == "K")
+	else if(event.which == 37) // right arrow
 	{
 		rotateX += 1.0;
 		updateRADecForPoint(0, 0);
 	}
-	else if(character == "j" || character == "J")
+	else if(event.which == 40) //  down arrow
 	{
 		rotateY -= 1.0;
 		updateRADecForPoint(0, 0);
 	}
-	else if(character == "l" || character == "L")
+	else if(event.which == 38) // up arrow
 	{
 		rotateY += 1.0;
 		updateRADecForPoint(0, 0);
