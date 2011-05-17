@@ -180,14 +180,16 @@ function updateRADecForPoint(x, y)
 	document.getElementById("RA").innerHTML = (360-rotateX); //currentRADec.RA;
 }
 
+window.addEventListener('DOMMouseScroll', wheel, false);
+
 /* mouse Wheel */
 function handle(delta) {
 	
 	if (delta < 0){
 		
-		console.log("zoom out");
+		console.log("zoom in");
 		
-		if(fov >= 0)
+		if(fov > 0)
 		{
 			fov = fov - 1;
 			updateView();
@@ -195,9 +197,9 @@ function handle(delta) {
 	}
 	
 	else{
-		 console.log("zoom in");
+		 console.log("zoom out");
 		
-		if(fov > 0)
+		if(fov >= 0)
 		{
 			fov = fov + 1;
 			updateView();
@@ -298,11 +300,11 @@ function updateView()
 		gl.uniform1f(gl.getUniformLocation(gl.program, "sdssWidth"), 60.0 - ((360 - rotateX) - 3.0*fov));
 	}*/
 	
-	
 	var scale = (fov*3600.0)/width;
+	
 	//var url = "SDSS.php?ra=" + ((360 - rotateX)) + "&dec=" + ((rotateY-180)) + "&scale=" + scale + "&width=" + Math.floor(((6.0*fov)*scale*15.0)) + "&height=" + Math.floor(((4.0*fov)*scale*15.0));
 	var url = "SDSS.php?ra=" + ((360 - rotateX)) + "&dec=" + ((rotateY-180)) + "&scale=" + scale + "&width=" + width + "&height=" + width;
-	var urlB = "FIRST.php?ra=" + ((360 - rotateX)) + "&dec=" + ((rotateY-180)) + "&scale=" + scale + "&width=" + width + "&height=" + width;
+	var urlB = "FIRST.php?ra=" + ((360 - rotateX)) + "&dec=" + ((rotateY-180)) + "&scale=" + scale + "&width=" + 500 + "&height=" + 500;
 	SDSStexture = loadImageTexture(gl, url);
 	FIRSTtexture = loadImageTexture(gl, urlB);
 	console.log("width: " + width);
