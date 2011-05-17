@@ -1,3 +1,5 @@
+var tempFOV = 0.0;
+
 function getViewBoundingBox()
 {
 	var topLeft = getRADecForScreenPoint(0, 0);
@@ -23,15 +25,6 @@ function getRADecForScreenPoint(x, y)
 	var dy = tan_fov_div_2 * (1.0 - (y / height_div_2));
 	
 	var proj = new J3DIVector3(x/width, y/height, 1.0);
-
-	//var pMatrix = new J3DIMatrix4();
-	//pMatrix.perspective(fov, width/height, 1, 10000);
-	//pMatrix.invert();
-	
-	//proj.multVecMatrix(pMatrix);
-	
-	//console.log("proj = " + proj);
-	
 	
 	var p1x = -dx;
 	var p1y = -dy;
@@ -43,11 +36,6 @@ function getRADecForScreenPoint(x, y)
     
 	currentMVMatrix.rotate(rotateY, 0,0,1);
     currentMVMatrix.rotate(rotateX, 0,1,0);          
-	//currentMVMatrix.translate(0, 0, 2); 
-	//currentMVMatrix.scale(currScale, currScale, currScale); 
-	//currentMVMatrix.translate(0, 0, -2); 
-	
-	//currentMVMatrix.invert();
 	
 	var dirX = p1x*currentMVMatrix.get(1,1) + p1y*currentMVMatrix.get(2,1) + p1z*currentMVMatrix.get(3,1);
 	var dirY = p1x*currentMVMatrix.get(1,2) + p1y*currentMVMatrix.get(2,2) + p1z*currentMVMatrix.get(3,2);
@@ -56,12 +44,6 @@ function getRADecForScreenPoint(x, y)
 	var origX = currentMVMatrix.get(4,1);
 	var origY = currentMVMatrix.get(4,2);
 	var origZ = currentMVMatrix.get(4,3);
-	
-	/*
-	p2x = p2x*currentMVMatrix.m11 + p2y*currentMVMatrix.m21 + p2z*currentMVMatrix.m31;
-	p2y = p2x*currentMVMatrix.m12 + p2y*currentMVMatrix.m22 + p2z*currentMVMatrix.m32;
-	p2z = p2x*currentMVMatrix.m13 + p2y*currentMVMatrix.m23 + p2z*currentMVMatrix.m33;
-	*/
 	
 	var A = dirX*dirX + dirY*dirY + dirZ*dirZ;
 	var B = 2 * (dirX*origX + dirY*origY + dirZ*origZ);
@@ -130,9 +112,7 @@ function getRADecForScreenPoint(x, y)
 	{
 		retval.Dec = -90 - (retval.Dec + 90);
 	}
-	
-	//document.getElementById("xyz").innerHTML = " X:" + raVecX + " Y:" + raVecY + " Z:" + raVecZ;
-	//document.getElementById("xyz").innerHTML = " X:" + x + " Y:" + y + " Z:" + z;
+
 	return retval;
 }
 
@@ -165,16 +145,11 @@ function updateRADec(event)
 	
 	document.getElementById("Dec").innerHTML = rotateY-180; //currentRADec.Dec;
 	document.getElementById("RA").innerHTML = (360-rotateX); //currentRADec.RA;
-	
-	//document.getElementById("Dec").innerHTML = rotateX;
-	//document.getElementById("RA").innerHTML = rotateY;
-	//document.getElementById("xyz").innerHTML = currScale;
 }
 
 function updateRADecForPoint(x, y)
 {
 	currentRADec = getRADecForScreenPoint(x, y);
-
 	
 	document.getElementById("Dec").innerHTML = rotateY-180; //currentRADec.Dec;
 	document.getElementById("RA").innerHTML = (360-rotateX); //currentRADec.RA;
@@ -189,7 +164,7 @@ function handle(delta) {
 		
 		console.log("zoom in");
 		
-		if(fov > 0)
+		if( (fov - 1 ) > 0)
 		{
 			fov = fov - 1;
 			updateView();
@@ -199,15 +174,17 @@ function handle(delta) {
 	else{
 		 console.log("zoom out");
 		
-		if(fov >= 0)
-		{
-			fov = fov + 1;
-			updateView();
-		}
-	}
+		fov = fov + 1;
+		updateView();	
+	}	
 }
 
 function wheel(event){
+	
+	if(first)
+		first = !first;
+	tempFOV = fov;
+	
 	var delta = 0;
 	if (!event) event = window.event;
 	if (event.wheelDelta) {
@@ -228,6 +205,7 @@ var oldMouseX = 0;
 var oldMouseY = 0;
 var rotateY = 180.0+30;
 var rotateX = 180.0;
+
 function pressMouse(event)
 {
 	if (event.which == 3)
@@ -254,22 +232,11 @@ function releaseMouse(event)
 	
 	var box = getViewBoundingBox();
 	
-	
-	
 	// --- Query for images from SDSS and FIRST ----
 	if((((360 - rotateX)+fov) > oldEast) || (((360 - rotateX)-fov) < oldWest) || (((rotateY-180)+fov) > oldNorth) || (((rotateY-180)-fov) < oldSouth))
 	{
 		if(fov < 20) updateView();
 	}
-	// ---------------------------------------------
-	
-	//alert("Right mouse click");
-	/*for(var i = 0; i<overlay.length; i++)
-	{
-		loadImageTextureWithBox(gl, "updateOverlay.php?north=" + box.north + "&east=" + box.east + "&south=" + box.south + "&west=" + box.west + "&arcSecondsRadius=10&keyVal=" + document.getElementById(String(i) + "dbFields").options[document.getElementById(String(i) + "dbFields").selectedIndex].value + "&keyMin=" + document.getElementById(String(i) + "keyMin").value + "&keyMax=" + document.getElementById(String(i) + "keyMax").value, box, i);
-		document.getElementById("xyz").innerHTML = "updateOverlay.php?north=" + box.north + "&east=" + box.east + "&south=" + box.south + "&west=" + box.west + "&arcSecondsRadius=10&keyVal=" + document.getElementById(String(i) + "dbFields").options[document.getElementById(String(i) + "dbFields").selectedIndex].value + "&keyMin=" + document.getElementById(String(i) + "keyMin").value + "&keyMax=" + document.getElementById(String(i) + "keyMax").value;
-		document.getElementById(String(i) + "loader").style.opacity = 1.0;
-	}*/
 	
 }
 
@@ -285,29 +252,20 @@ function updateView()
 	gl.uniform1f(gl.getUniformLocation(gl.program, "firstDec"), (rotateY-180) - (fov));
 	gl.uniform1f(gl.getUniformLocation(gl.program, "firstWidth"), 2.0*(fov));
 	gl.uniform1f(gl.getUniformLocation(gl.program, "firstHeight"),2.0*(fov));
-	/*if(((rotateY-180) - 3.0*fov) < -10.0)
-	{	
-		gl.uniform1f(gl.getUniformLocation(gl.program, "sdssDec"), -10);
-		gl.uniform1f(gl.getUniformLocation(gl.program, "sdssHeight"), ((rotateY-180) - 3.0*fov) + 10.0);
-	}*//*
-	if((((360 - rotateX) - 3.0*fov) < 310) && ((360 - rotateX) > 60))
-	{	
-		//gl.uniform1f(gl.getUniformLocation(gl.program, "sdssDec"), (rotateY-180) - 3.0*fov);
-		gl.uniform1f(gl.getUniformLocation(gl.program, "sdssWidth"), ((360 - rotateX) + 3.0*fov) - 310);
-	}*//*
-	if((((360 - rotateX) < 310) && (((360 - rotateX) + 3.0*fov) > 60))
-	{
-		gl.uniform1f(gl.getUniformLocation(gl.program, "sdssWidth"), 60.0 - ((360 - rotateX) - 3.0*fov));
-	}*/
 	
-	var scale = (fov*3600.0)/width;
 	
-	//var url = "SDSS.php?ra=" + ((360 - rotateX)) + "&dec=" + ((rotateY-180)) + "&scale=" + scale + "&width=" + Math.floor(((6.0*fov)*scale*15.0)) + "&height=" + Math.floor(((4.0*fov)*scale*15.0));
+	var scale = (fov*3600.0)/width; // default scale
+	FIRSTtexture = null;
+	
+	if(first){ // first images must be shown at 1.8
+		scale = 1.8;
+		var urlB = "FIRST.php?ra=" + ((360 - rotateX)) + "&dec=" + ((rotateY-180)) + "&scale=" + scale + "&width=" + width + "&height=" + width;
+		FIRSTtexture = loadImageTexture(gl, urlB);
+	}
+	
 	var url = "SDSS.php?ra=" + ((360 - rotateX)) + "&dec=" + ((rotateY-180)) + "&scale=" + scale + "&width=" + width + "&height=" + width;
-	var urlB = "FIRST.php?ra=" + ((360 - rotateX)) + "&dec=" + ((rotateY-180)) + "&scale=" + scale + "&width=" + 500 + "&height=" + 500;
 	SDSStexture = loadImageTexture(gl, url);
-	FIRSTtexture = loadImageTexture(gl, urlB);
-	console.log("width: " + width);
+
 	document.getElementById('xyz').innerHTML = scale;
 	oldWest = (360 - rotateX) - fov;
 	oldEast = (360 - rotateX) + fov;
@@ -332,10 +290,9 @@ function doLoadImageTextureWithBox(ctx, image, texture, box, qNumber)
     ctx.texParameteri(ctx.TEXTURE_2D, ctx.TEXTURE_MIN_FILTER, ctx.LINEAR);
     ctx.texParameteri(ctx.TEXTURE_2D, ctx.TEXTURE_WRAP_S, ctx.CLAMP_TO_EDGE);
     ctx.texParameteri(ctx.TEXTURE_2D, ctx.TEXTURE_WRAP_T, ctx.CLAMP_TO_EDGE);
-    //ctx.generateMipmap(ctx.TEXTURE_2D)
+
     ctx.bindTexture(ctx.TEXTURE_2D, null);
     
-    //updateTexCoords(gl, gl.sphere, box);
     if(overlay[qNumber].texture != null)
     {
     	gl.deleteTexture(overlay[qNumber].texture);
@@ -356,18 +313,11 @@ function rotateCamera(event)
 	{
 		zooming = false;	//Cancels current zoom events
 		
-		
 		var oldRADec = getRADecForScreenPoint(oldMouseX, oldMouseY);
 		var newRADec = getRADecForScreenPoint(event.clientX, event.clientY);
-		//while(Math.abs(newRADec.RA - oldRADec.RA) > 0.00001 || Math.abs(newRADec.Dec - oldRADec.Dec) > 0.00001)
-		//{
-			rotateY += newRADec.Dec - oldRADec.Dec;
-			rotateX -= newRADec.RA - oldRADec.RA;
-			//rotateX += 0.04*(event.clientX - oldMouseX);
-			//rotateY -= 0.04*(event.clientY - oldMouseY);
-		//	newRADec = getRADecForScreenPoint(event.clientX, event.clientY);
-		//}
-		
+
+		rotateY += newRADec.Dec - oldRADec.Dec;
+		rotateX -= newRADec.RA - oldRADec.RA;
 		
 		if(rotateX > 360)
 		{
@@ -402,7 +352,6 @@ function getRotate()
 
 function keyPress(event)
 {
-	console.log("KeyPress event");
 	var character = String.fromCharCode(event.which);
 	if(character == "a" || character == "A")
 	{
@@ -436,42 +385,54 @@ function keyPress(event)
 		rotateY += 1.0;
 		updateRADecForPoint(0, 0);
 	}
-	else if(character == "r" || character == "R")
+	else if(character == "r" || character == "R") // reset
 	{
-		/*var box = getViewBoundingBox();
-		if(showTexture1)
-		{
-			otherTexture = loadImageTexture(gl, "http://vis.cs.pitt.edu/astroshelf/smartoverlay/updateOverlay.php?north=" + box.north + "&east=" + box.east + "&south=" + box.south + "&west=" + box.west + "&arcSecondsRadius=3&arcSecondResolution=0.005");
-		}
-		else
-		{
-			spiritTexture = loadImageTexture(gl, "http://vis.cs.pitt.edu/astroshelf/smartoverlay/updateOverlay.php?north=" + box.north + "&east=" + box.east + "&south=" + box.south + "&west=" + box.west + "&arcSecondsRadius=3&arcSecondResolution=0.005");
-		}*/
 		updateView();
 	}
-	else if(character == "g" || character == "G")
+	else if(character == "g" || character == "G") // enable/disable grid
 	{
 		drawGrid = !drawGrid;
 	}
-	else if(character == "Z" || character == "z")
+	else if(character == "Z" || character == "z") // zoom in
 	{
+		if(first)
+			first = !first;
+		
 		if(fov < 100)
 		{
 			fov = fov + 1;
-			//if((fov < 15) && (fov > 5)) updateView();
 			updateView();
-			//console.log("Zooming out: fov = " + fov);
 		}
+		tempFOV = fov;
+		
 	}
-	else if(character == "X" || character == "x")
+	else if(character == "X" || character == "x") // zoom out
 	{
+		if(first)
+			first = !first;
+		
 		if(fov > 0)
 		{
 			fov = fov - 1;
 			updateView();
-			//if((fov < 15) && (fov > 5)) updateView();
-			//console.log("Zooming out: fov = " + fov);
 		}
+		tempFOV = fov;
+		
+	}
+	else if(character == "f" || character == "F"){
+		
+		console.log("fov: = " + fov);
+		
+		if(first)
+			fov = tempFOV;
+		else{
+			tempFOV = fov;
+			fov = 0.5;
+		}
+		
+		first = !first;
+		updateView();
+		
 	}
 }
 

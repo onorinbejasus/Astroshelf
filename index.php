@@ -117,6 +117,7 @@
 	var SDSStexture;
 	var FIRSTtexture;
 	var drawGrid = true;
+	var first = false;
     function init()
     {
         // Initialize
@@ -138,8 +139,6 @@
 		gl.uniform1i(gl.getUniformLocation(gl.program, "SDSS"), 1);
 		gl.uniform1i(gl.getUniformLocation(gl.program, "FIRST"), 2);
 		
-		
- 
         // Enable texturing
         gl.enable(gl.TEXTURE_2D);
  
@@ -151,8 +150,9 @@
 		gl.uniform1f(gl.getUniformLocation(gl.program, "longs"), 360.0);
 		gl.uniform1f(gl.getUniformLocation(gl.program, "degPerLat"), 1.0);
 		gl.uniform1f(gl.getUniformLocation(gl.program, "degPerLong"), 1.0);
+		
 		gl.uniform1f(gl.getUniformLocation(gl.program, "firstBlend"), .5);
-		//gl.box = makeBox(gl);
+
         // Load an image to use. Returns a WebGLTexture object
         spiritTexture = loadImageTexture(gl, "SkyImg.jpg");
 		sdssTexture = loadImageTexture(gl, "SDSS.jpeg");
@@ -173,7 +173,6 @@
         // Set up all the vertex attributes for vertices, normals and texCoords
  
         // Bind the index array
-        //gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, gl.box.triangleIndices);
 		
 		currentAngle = 0.0;
 		incAngle = 0.1;
@@ -216,33 +215,21 @@
 		//console.log("fov = " + fov)
     }
  
- 	
  	var currScale = 7.14;
     function drawPicture(gl)
     {
     	
         // Make sure the canvas is sized correctly.
         reshape(gl);
-		
-		
- 
+		 
         // Clear the canvas
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
  
         // Make a model/view matrix.
         gl.mvMatrix.makeIdentity();
-        //gl.mvMatrix.rotate(rotateX, 0,1,0);
-		//arbAxis = new J3DIVector3(0,0,-1);
-		//console.log(arbAxis);
-		//arbAxis.multVecMatrix(gl.mvMatrix);
-		//console.log(arbAxis);
-		//arbAxis.cross(new J3DIVector3(0,1,0));
-		//arbAxis.normalize();
-		//console.log(arbAxis);
+ 
 		gl.mvMatrix.rotate(rotateY,0,0,1);
 		gl.mvMatrix.rotate(rotateX, 0,1,0);
-		//console.log(gl.mvMatrix.getAsArray());
-        //gl.mvMatrix.rotate(currentAngle, 0,1,0);
  
         // Construct the normal matrix from the model-view matrix and pass it in
         gl.normalMatrix.load(gl.mvMatrix);
@@ -271,19 +258,10 @@
         gl.bindTexture(gl.TEXTURE_2D, spiritTexture);
 		gl.activeTexture(gl.TEXTURE1);
 		gl.bindTexture(gl.TEXTURE_2D, SDSStexture);
+	
 		gl.activeTexture(gl.TEXTURE2);
 		gl.bindTexture(gl.TEXTURE_2D, FIRSTtexture);
-		
-		//viewBox = getViewBoundingBox();
-		//console.log("North: " + (rotateY-180));
-		//console.log("South: " + ((rotateY-180) - 15.0));
-		//console.log("East: " + ((360 - rotateX) + 15.0));
-		//console.log("West: " + (360 - rotateX));
-		
- 
-        // Draw the cube
-		//console.log(gl.box.numTriangleIndices);
-        //gl.drawElements(gl.TRIANGLES, gl.box.numTriangleIndices, gl.UNSIGNED_SHORT, 0);
+
 		
 		gl.uniform1i(gl.getUniformLocation(gl.program, "grid"), 0);
 		gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, gl.box.indexObject);
@@ -362,15 +340,8 @@
 </canvas>
 <div id="floaty">
 	<img src="loader.gif" id="0loader" style="opacity: 0.0"/>
-	<!--The Code below is for the floaty design Dan was using.  It is now depricated
-	Key: <?php getControls(0);?>
-	Color: <input type="textfield" id="0hex" value="FF0000" onchange="updateColorForOverlay(0);"/>
-	Alpha: <input type="textfield" id="0alpha" value="100" onchange="updateAlphaForOverlay(0);"/>
-	MinVal: <input type="textfield" id="0keyMin" value="0.0" onchange="updateKeyMinForOverlay(0); releaseMouse(null);"/>
-	MaxVal: <input type="textfield" id="0keyMax" value="1.0" onchange="updateKeyMaxForOverlay(0); releaseMouse(null);"/>
-	<input type="checkbox" id="0visible" checked='true'/>
-	<input type="submit" value="New" onclick="addOverlayObject()"/>-->
-	SDSS <input type="range" id="alpha" min="0" max="100" value="50" onchange="updateAlpha()"> FIRST
+
+	SDSS <input name="range" type='range' id="alpha" min='0' max='100' value='50' onchange="updateAlpha()" /> FIRST
 	
 </div>
 <div id="coordinates">
