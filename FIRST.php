@@ -78,6 +78,6 @@
 		imagedestroy($im);
 		//Show the image
 		imagegif($im2);
-		imagedestroy($im);
+		imagedestroy($im2);
 	}
 ?>
