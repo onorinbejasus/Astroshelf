@@ -117,6 +117,20 @@ function getRADecForScreenPoint(x, y)
 }
 
 
+function changeRA() {
+        var RA = parseFloat(document.getElementById("RA").value);
+        currentRADec.RA = RA;
+        rotateX = 360-RA;
+}
+
+function changeDec() {
+        var Dec = parseFloat(document.getElementById("Dec").value);
+        currentRADec.Dec = Dec;
+        rotateY = Dec + 180;
+}
+
+var changingRA = false;
+var changingDec = false;
 var currentRADec = { };
 var oldClientX = 0;
 var oldClientY = 0;
@@ -142,17 +156,24 @@ function updateRADec(event)
 	
 	currentRADec = getRADecForScreenPoint(event.clientX, event.clientY);
 
+        var RA = parseFloat(document.getElementById("RA").value);
+        var Dec = parseFloat(document.getElementById("Dec").value);
+        // If it hasn't been updated
+        if (currentRADec.RA === RA){
+                document.getElementById("RA").value = (360-rotateX);
+        }
+        if (currentRADec.Dec === Dec) {
+                document.getElementById("Dec").value = rotateY-180;
+        }
 	
-	document.getElementById("Dec").innerHTML = rotateY-180; //currentRADec.Dec;
-	document.getElementById("RA").innerHTML = (360-rotateX); //currentRADec.RA;
 }
 
 function updateRADecForPoint(x, y)
 {
 	currentRADec = getRADecForScreenPoint(x, y);
 	
-	document.getElementById("Dec").innerHTML = rotateY-180; //currentRADec.Dec;
-	document.getElementById("RA").innerHTML = (360-rotateX); //currentRADec.RA;
+	document.getElementById("Dec").value = rotateY-180; //currentRADec.Dec;
+	document.getElementById("RA").value = (360-rotateX); //currentRADec.RA;
 }
 
 window.addEventListener('DOMMouseScroll', wheel, false);

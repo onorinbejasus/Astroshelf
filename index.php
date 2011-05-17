@@ -345,7 +345,10 @@
 	
 </div>
 <div id="coordinates">
-	RA: <span id="RA">Awesome!</span> Dec: <span id="Dec">Radical!</span> Scale: <span id="xyz"> Stuff </span>
+        RA: <input type="text" id="RA" onfocus="changingRA = true;" onblur="changingRA = false;">
+        Dec: <input type="text" id="Dec" onfocuse="changingDec = true;" onblur="changingDec = false;">
+        Scale: <span id="xyz"> Stuff </span>
+        <input type="submit" id="change" value="Change coordinates" onclick="changeRA(); changeDec(); updateView();">
 </div>
 </body>
  
