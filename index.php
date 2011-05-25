@@ -117,7 +117,7 @@
 	var SDSStexture;
 	var FIRSTtexture;
 	var drawGrid = true;
-	var first = false;
+//	var first = false;
     function init()
     {
         // Initialize
@@ -341,12 +341,13 @@
 <div id="floaty">
 	<img src="loader.gif" id="0loader" style="opacity: 0.0"/>
 
-	SDSS <input name="range" type='range' id="alpha" min='0' max='100' value='50' onchange="updateAlpha()" /> FIRST
+	SDSS <input name='range' type='range' id='alpha' min='0' max='100' value='0' onchange='updateAlpha()' disabled="disabled" /> FIRST
+	<input name='first' id='first' type='checkbox' onchange='updateFirst()' /> 
 	
 </div>
 <div id="coordinates">
-        RA: <input type="text" id="RA" onfocus="changingRA = true;" onblur="changingRA = false;">
-        Dec: <input type="text" id="Dec" onfocuse="changingDec = true;" onblur="changingDec = false;">
+        RA: <input type="text" id="RA" value="180" onfocus="changingRA = true;" onblur="changingRA = false;">
+        Dec: <input type="text" id="Dec" value="30" onfocuse="changingDec = true;" onblur="changingDec = false;">
         Scale: <span id="xyz"> Stuff </span>
         <input type="submit" id="change" value="Change coordinates" onclick="changeRA(); changeDec(); updateView();">
 </div>

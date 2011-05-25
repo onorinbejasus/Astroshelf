@@ -106,10 +106,7 @@
         // Create a box. On return 'gl' contains a 'box' property with
         // the BufferObjects containing the arrays for vertices,
         // normals, texture coords, and indices.
-        gl.sphere = makeSphere(gl, 360, 178);
- 
-        
-        
+        gl.sphere = makeSphere(gl, 360, 178);        
  
         // Create some matrices to use later and save their locations in the shaders
         gl.mvMatrix = new CanvasMatrix4();

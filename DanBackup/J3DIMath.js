@@ -31,9 +31,96 @@
         J3DIMatrix4 - A 4x4 Matrix
 */
 
+/*
+    J3DIMatrix4 class
+
+    This class implements a 4x4 matrix. It has functions which duplicate the
+    functionality of the OpenGL matrix stack and glut functions. On browsers
+    that support it, CSSMatrix is used to accelerate operations.
+
+    IDL:
+
+    [
+        Constructor(in J3DIMatrix4 matrix),                 // copy passed matrix into new J3DIMatrix4
+        Constructor(in sequence<float> array)               // create new J3DIMatrix4 with 16 floats (row major)
+        Constructor()                                       // create new J3DIMatrix4 with identity matrix
+    ]
+    interface J3DIMatrix4 {
+        void load(in J3DIMatrix4 matrix);                   // copy the values from the passed matrix
+        void load(in sequence<float> array);                // copy 16 floats into the matrix
+        sequence<float> getAsArray();                       // return the matrix as an array of 16 floats
+        Float32Array getAsFloat32Array();             // return the matrix as a Float32Array with 16 values
+        void setUniform(in WebGLRenderingContext ctx,       // Send the matrix to the passed uniform location in the passed context
+                        in WebGLUniformLocation loc,
+                        in boolean transpose);
+        void makeIdentity();                                // replace the matrix with identity
+        void transpose();                                   // replace the matrix with its transpose
+        void invert();                                      // replace the matrix with its inverse
+
+        void translate(in float x, in float y, in float z); // multiply the matrix by passed translation values on the right
+        void translate(in J3DVector3 v);                    // multiply the matrix by passed translation values on the right
+        void scale(in float x, in float y, in float z);     // multiply the matrix by passed scale values on the right
+        void scale(in J3DVector3 v);                        // multiply the matrix by passed scale values on the right
+        void rotate(in float angle,                         // multiply the matrix by passed rotation values on the right
+                    in float x, in float y, in float z);    // (angle is in degrees)
+        void rotate(in float angle, in J3DVector3 v);       // multiply the matrix by passed rotation values on the right
+                                                            // (angle is in degrees)
+        void multiply(in CanvasMatrix matrix);              // multiply the matrix by the passed matrix on the right
+        void divide(in float divisor);                      // divide the matrix by the passed divisor
+        void ortho(in float left, in float right,           // multiply the matrix by the passed ortho values on the right
+                   in float bottom, in float top,
+                   in float near, in float far);
+        void frustum(in float left, in float right,         // multiply the matrix by the passed frustum values on the right
+                     in float bottom, in float top,
+                     in float near, in float far);
+        void perspective(in float fovy, in float aspect,    // multiply the matrix by the passed perspective values on the right
+                         in float zNear, in float zFar);
+        void lookat(in J3DVector3 eye,                      // multiply the matrix by the passed lookat
+                in J3DVector3 center,  in J3DVector3 up);   // values on the right
+         bool decompose(in J3DVector3 translate,            // decompose the matrix into the passed vector
+                        in J3DVector3 rotate,
+                        in J3DVector3 scale,
+                        in J3DVector3 skew,
+                        in sequence<float> perspective);
+    }
+
+    [
+        Constructor(in J3DVector3 vector),                  // copy passed vector into new J3DVector3
+        Constructor(in sequence<float> array)               // create new J3DVector3 with 3 floats from array
+        Constructor(in float x, in float y, in float z)     // create new J3DVector3 with 3 floats
+        Constructor()                                       // create new J3DVector3 with (0,0,0)
+    ]
+    interface J3DVector3 {
+        void load(in J3DVector3 vector);                    // copy the values from the passed vector
+        void load(in sequence<float> array);                // copy 3 floats into the vector from array
+        void load(in float x, in float y, in float z);      // copy 3 floats into the vector
+        sequence<float> getAsArray();                       // return the vector as an array of 3 floats
+        Float32Array getAsFloat32Array();             // return the matrix as a Float32Array with 16 values
+        void multMatrix(in J3DIMatrix4 matrix);             // multiply the vector by the passed matrix (on the right)
+        float vectorLength();                               // return the length of the vector
+        float dot();                                        // return the dot product of the vector
+        void cross(in J3DVector3 v);                        // replace the vector with vector x v
+        void divide(in float divisor);                      // divide the vector by the passed divisor
+    }
+*/
+
 J3DIHasCSSMatrix = false;
 J3DIHasCSSMatrixCopy = false;
+/*
+if ("WebKitCSSMatrix" in window && ("media" in window && window.media.matchMedium("(-webkit-transform-3d)")) ||
+                                   ("styleMedia" in window && window.styleMedia.matchMedium("(-webkit-transform-3d)"))) {
+    J3DIHasCSSMatrix = true;
+    if ("copy" in WebKitCSSMatrix.prototype)
+        J3DIHasCSSMatrixCopy = true;
+}
+*/
 
+//  console.log("J3DIHasCSSMatrix="+J3DIHasCSSMatrix);
+//  console.log("J3DIHasCSSMatrixCopy="+J3DIHasCSSMatrixCopy);
+
+//
+// J3DIMatrix4
+//
 J3DIMatrix4 = function(m)
 {
     if (J3DIHasCSSMatrix)
@@ -158,6 +245,12 @@ J3DIMatrix4.prototype.get = function(x, y)
 		return mat[4*(y-1) + (x-1)];
 	}
 }
+
+J3DIMatrix4.prototype.getAsWebGLFloatArray = function()
+{
+    return new WebGLFloatArray(this.getAsArray());
+}
+
 // ------------------------------------------------------------------------------------------------------
 
 J3DIMatrix4.prototype.setUniform = function(ctx, loc, transpose)
@@ -971,7 +1064,16 @@ J3DIVector3.prototype.normalize = function()
 {
 	this.divide(this.vectorLength());
 }
+// ------------------------------------------------------------------------------------------------
 
+// --- Apple inc. wrote this... Notice anything wrong!? -------------------------------------------
+/*J3DIVector3.prototype.cross = function(v)
+{
+    this[0] =  this[1] * v[2] - this[2] * v[1];
+    this[1] = -this[0] * v[2] + this[2] * v[0];
+    this[2] =  this[0] * v[1] - this[1] * v[0];
+}*/
+// --- This is what it should be... ----------------------------------------------------------------
 J3DIVector3.prototype.cross = function(v)
 {
     var x = this[0];

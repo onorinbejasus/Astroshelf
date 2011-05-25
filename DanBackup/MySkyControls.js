@@ -26,7 +26,7 @@ function getRADecForScreenPoint(x, y)
 	var p1y = -dy;
 	var p1z = -1.0;
 	
-	var currentMVMatrix = new CanvasMatrix4();
+	var currentMVMatrix = new J3DIMatrix4();
 	currentMVMatrix.makeIdentity();
       
     currentMVMatrix.rotate(-rotateY, 0,1,0);
@@ -38,13 +38,13 @@ function getRADecForScreenPoint(x, y)
 	
 	currentMVMatrix.invert();
 	
-	var dirX = p1x*currentMVMatrix.m11 + p1y*currentMVMatrix.m21 + p1z*currentMVMatrix.m31;
-	var dirY = p1x*currentMVMatrix.m12 + p1y*currentMVMatrix.m22 + p1z*currentMVMatrix.m32;
-	var dirZ = p1x*currentMVMatrix.m13 + p1y*currentMVMatrix.m23 + p1z*currentMVMatrix.m33;
+	var dirX = p1x*currentMVMatrix.get(1,1) + p1y*currentMVMatrix.get(2,1) + p1z*currentMVMatrix.get(3,1);
+	var dirY = p1x*currentMVMatrix.get(1,2) + p1y*currentMVMatrix.get(2,2) + p1z*currentMVMatrix.get(3,2);
+	var dirZ = p1x*currentMVMatrix.get(1,3) + p1y*currentMVMatrix.get(2,3) + p1z*currentMVMatrix.get(3,3);
 	
-	var origX = currentMVMatrix.m41;
-	var origY = currentMVMatrix.m42;
-	var origZ = currentMVMatrix.m43;
+	var origX = currentMVMatrix.get(4,1);
+	var origY = currentMVMatrix.get(4,2);
+	var origZ = currentMVMatrix.get(4,3);
 	
 	/*
 	p2x = p2x*currentMVMatrix.m11 + p2y*currentMVMatrix.m21 + p2z*currentMVMatrix.m31;
@@ -208,7 +208,7 @@ function loadImageTextureWithBox(ctx, url, box, qNumber)
 function doLoadImageTextureWithBox(ctx, image, texture, box, qNumber)
 {
     ctx.bindTexture(ctx.TEXTURE_2D, texture);
-    ctx.texImage2D(ctx.TEXTURE_2D, 0, image);
+    ctx.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);
     ctx.texParameteri(ctx.TEXTURE_2D, ctx.TEXTURE_MAG_FILTER, ctx.LINEAR);
     ctx.texParameteri(ctx.TEXTURE_2D, ctx.TEXTURE_MIN_FILTER, ctx.LINEAR);
     ctx.texParameteri(ctx.TEXTURE_2D, ctx.TEXTURE_WRAP_S, ctx.CLAMP_TO_EDGE);

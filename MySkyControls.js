@@ -92,8 +92,6 @@ function getRADecForScreenPoint(x, y)
 	y /= length;
 	z /= length;
 	
-	
-	
 	var retval = { };
 	
 	retval.RA = (Math.acos((x*0 + 0*0 + z*-1)/Math.sqrt(x*x + z*z)) * 180.0) / Math.PI;
@@ -115,7 +113,6 @@ function getRADecForScreenPoint(x, y)
 
 	return retval;
 }
-
 
 function changeRA() {
         var RA = parseFloat(document.getElementById("RA").value);
@@ -183,7 +180,16 @@ function handle(delta) {
 	
 	if (delta < 0){
 		
-		console.log("zoom in");
+		if(document.getElementById("first").checked == true){
+
+			document.getElementById("first").checked = false;
+			document.getElementById("alpha").disabled = "disabled";
+			document.getElementById("alpha").value = 0;
+
+			var newAlpha = parseFloat(document.getElementById("alpha").value)/100;
+			var test = gl.uniform1f(gl.getUniformLocation(gl.program, "firstBlend") , newAlpha);
+
+		}
 		
 		if( (fov - 1 ) > 0)
 		{
@@ -193,7 +199,17 @@ function handle(delta) {
 	}
 	
 	else{
-		 console.log("zoom out");
+		
+		if(document.getElementById("first").checked == true){
+
+			document.getElementById("first").checked = false;
+			document.getElementById("alpha").disabled = "disabled";
+			document.getElementById("alpha").value = 0;
+
+			var newAlpha = parseFloat(document.getElementById("alpha").value)/100;
+			var test = gl.uniform1f(gl.getUniformLocation(gl.program, "firstBlend") , newAlpha);
+
+		}
 		
 		fov = fov + 1;
 		updateView();	
@@ -201,11 +217,7 @@ function handle(delta) {
 }
 
 function wheel(event){
-	
-	if(first)
-		first = !first;
-	tempFOV = fov;
-	
+		
 	var delta = 0;
 	if (!event) event = window.event;
 	if (event.wheelDelta) {
@@ -254,45 +266,85 @@ function releaseMouse(event)
 	var box = getViewBoundingBox();
 	
 	// --- Query for images from SDSS and FIRST ----
-	if((((360 - rotateX)+fov) > oldEast) || (((360 - rotateX)-fov) < oldWest) || (((rotateY-180)+fov) > oldNorth) || (((rotateY-180)-fov) < oldSouth))
-	{
-		if(fov < 20) updateView();
-	}
+	// if((((360 - rotateX)+fov) > oldEast) || (((360 - rotateX)-fov) < oldWest) || (((rotateY-180)+fov) > oldNorth) || (((rotateY-180)-fov) < oldSouth))
+	// {
+	// 	if(fov < 20) updateView();
+	// }
 	
 }
 
 function updateView()
-{
-		
+{				
+	
+	console.log("screen width: " + screen.width);
+	console.log("2 * fov = " + (2*fov) );
+	
 	gl.uniform1f(gl.getUniformLocation(gl.program, "sdssRA"), (360 - rotateX) - (fov));
 	gl.uniform1f(gl.getUniformLocation(gl.program, "sdssDec"), (rotateY-180) - (fov));
 	gl.uniform1f(gl.getUniformLocation(gl.program, "sdssWidth"), 2.0*(fov));
-	gl.uniform1f(gl.getUniformLocation(gl.program, "sdssHeight"),2.0*(fov));
+	gl.uniform1f(gl.getUniformLocation(gl.program, "sdssHeight"), 2.0*(fov));
 	
 	gl.uniform1f(gl.getUniformLocation(gl.program, "firstRA"), (360 - rotateX) - (fov));
 	gl.uniform1f(gl.getUniformLocation(gl.program, "firstDec"), (rotateY-180) - (fov));
 	gl.uniform1f(gl.getUniformLocation(gl.program, "firstWidth"), 2.0*(fov));
-	gl.uniform1f(gl.getUniformLocation(gl.program, "firstHeight"),2.0*(fov));
+	gl.uniform1f(gl.getUniformLocation(gl.program, "firstHeight"), 2.0*(fov));
 	
 	
 	var scale = (fov*3600.0)/width; // default scale
-	FIRSTtexture = null;
 	
-	if(first){ // first images must be shown at 1.8
+	if(document.getElementById("first").checked == true){ // first images must be shown at 1.8
 		scale = 1.8;
-		var urlB = "FIRST.php?ra=" + ((360 - rotateX)) + "&dec=" + ((rotateY-180)) + "&scale=" + scale + "&width=" + width + "&height=" + width;
-		FIRSTtexture = loadImageTexture(gl, urlB);
+		document.getElementById("alpha").disabled = "enabled";	
+		document.getElementById("alpha").value = 50;
+		
+	}
+	else{
+		document.getElementById("alpha").value = 0;
+		document.getElementById("alpha").disabled = "disabled";	
 	}
 	
 	var url = "SDSS.php?ra=" + ((360 - rotateX)) + "&dec=" + ((rotateY-180)) + "&scale=" + scale + "&width=" + width + "&height=" + width;
 	SDSStexture = loadImageTexture(gl, url);
-
+	var urlB = "FIRST.php?ra=" + ((360 - rotateX)) + "&dec=" + ((rotateY-180)) + "&scale=" + scale + "&width=" + width + "&height=" + width;
+	FIRSTtexture = loadImageTexture(gl, urlB);
+	
 	document.getElementById('xyz').innerHTML = scale;
 	oldWest = (360 - rotateX) - fov;
 	oldEast = (360 - rotateX) + fov;
 	oldNorth = (rotateY-180) + fov;
 	oldSouth = (rotateY-180) - fov;
 }
+
+function updateFirst(){
+
+	if(document.getElementById("first").checked){
+		
+		document.getElementById("alpha").disabled = "";
+		document.getElementById("alpha").value = 50;
+		
+		var newAlpha = parseFloat(document.getElementById("alpha").value)/100;
+		var test = gl.uniform1f(gl.getUniformLocation(gl.program, "firstBlend") , newAlpha);
+		
+		tempFOV = fov;
+		fov = 40;
+		
+		updateView();
+		
+	}
+	else{
+		
+		document.getElementById("alpha").disabled = "disabled";
+		document.getElementById("alpha").value = 0;
+		
+		var newAlpha = parseFloat(document.getElementById("alpha").value)/100;
+		var test = gl.uniform1f(gl.getUniformLocation(gl.program, "firstBlend") , newAlpha);
+		
+		fov = tempFOV;
+		updateView();
+			
+	}
+	
+}s
 
 function loadImageTextureWithBox(ctx, url, box, qNumber)
 {
@@ -374,6 +426,7 @@ function getRotate()
 function keyPress(event)
 {
 	var character = String.fromCharCode(event.which);
+	
 	if(character == "a" || character == "A")
 	{
 		desiredZoomLevel = currScale/1.5;
@@ -416,8 +469,16 @@ function keyPress(event)
 	}
 	else if(character == "Z" || character == "z") // zoom in
 	{
-		if(first)
-			first = !first;
+		if(document.getElementById("first").checked == true){
+			
+			document.getElementById("first").checked = false;
+			document.getElementById("alpha").disabled = "disabled";
+			document.getElementById("alpha").value = 0;
+
+			var newAlpha = parseFloat(document.getElementById("alpha").value)/100;
+			var test = gl.uniform1f(gl.getUniformLocation(gl.program, "firstBlend") , newAlpha);
+		
+		}
 		
 		if(fov < 100)
 		{
@@ -429,12 +490,20 @@ function keyPress(event)
 	}
 	else if(character == "X" || character == "x") // zoom out
 	{
-		if(first)
-			first = !first;
+		if(document.getElementById("first").checked == true){
+			
+			document.getElementById("first").checked = false;
+			document.getElementById("alpha").disabled = "disabled";
+			document.getElementById("alpha").value = 0;
+
+			var newAlpha = parseFloat(document.getElementById("alpha").value)/100;
+			var test = gl.uniform1f(gl.getUniformLocation(gl.program, "firstBlend") , newAlpha);
+			
+		}
 		
 		if(fov > 0)
 		{
-			fov = fov - 1;
+			fov = fov  - 1;
 			updateView();
 		}
 		tempFOV = fov;
@@ -443,16 +512,6 @@ function keyPress(event)
 	else if(character == "f" || character == "F"){
 		
 		console.log("fov: = " + fov);
-		
-		if(first)
-			fov = tempFOV;
-		else{
-			tempFOV = fov;
-			fov = 0.5;
-		}
-		
-		first = !first;
-		updateView();
 		
 	}
 }
