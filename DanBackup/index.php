@@ -113,9 +113,6 @@
         // normals, texture coords, and indices.
         gl.sphere = makeSphere(gl, 360, 178);
  
-        
-        
- 
         // Create some matrices to use later and save their locations in the shaders
         gl.mvMatrix = new J3DIMatrix4();
         gl.u_normalMatrixLoc = gl.getUniformLocation(gl.program, "u_normalMatrix");

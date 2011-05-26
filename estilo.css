@@ -35,6 +35,18 @@ canvas#skycanvas {
 #floaty input {
 	width: 80px;
 }
+#overlays {
+	position: absolute;
+	top: 32px;
+	left: 0px;
+	width: 100%;
+	background: url(bgAlpha.png) top left;
+	padding: 5px 0;
+	color: #FFF;	
+}
+#overlays input {
+	width: 80px;
+}
 #coordinates {
 	position: absolute;
 	bottom: 0;

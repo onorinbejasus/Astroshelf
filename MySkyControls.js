@@ -294,7 +294,7 @@ function updateView()
 	
 	if(document.getElementById("first").checked == true){ // first images must be shown at 1.8
 		scale = 1.8;
-		document.getElementById("alpha").disabled = "enabled";	
+		document.getElementById("alpha").disabled = "";	
 		document.getElementById("alpha").value = 50;
 		
 	}
@@ -344,7 +344,7 @@ function updateFirst(){
 			
 	}
 	
-}s
+}
 
 function loadImageTextureWithBox(ctx, url, box, qNumber)
 {

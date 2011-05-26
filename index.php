@@ -6,6 +6,7 @@
 <script src="MyGUIControls.js" type="text/javascript"> </script>
 <script src="J3DI.js" type="text/javascript"> </script>
 <script src="J3DIMath.js" type="text/javascript"> </script>
+<script src="MyObjects.js" type="text/javascript"> </script>
 
 <script src="MySkyControls.js" type="text/javascript"> </script>
 
@@ -345,6 +346,19 @@
 	<input name='first' id='first' type='checkbox' onchange='updateFirst()' /> 
 	
 </div>
+
+<div id="overlays"> 
+	<img src="loader.gif" id="0loader" style="opacity: 0.0"/>
+	Key: <?php getControls(0);?>
+	Color: <input type="range" id="0hex" value="FF0000" onchange="updateColorForOverlay(0);"/>
+	Alpha: <input type="range" id="0alpha" value="100" onchange="updateAlphaForOverlay(0);"/>
+	MinVal: <input type="textfield" id="0keyMin" value="0.0" onchange="updateKeyMinForOverlay(0); releaseMouse(null);"/>
+	MaxVal: <input type="textfield" id="0keyMax" value="1.0" onchange="updateKeyMaxForOverlay(0); releaseMouse(null);"/>
+	<input type="checkbox" id="0visible" checked='true'/>
+	<input type="submit" value="New" onclick="addOverlayObject()"/>
+	
+</div>
+
 <div id="coordinates">
         RA: <input type="text" id="RA" value="180" onfocus="changingRA = true;" onblur="changingRA = false;">
         Dec: <input type="text" id="Dec" value="30" onfocuse="changingDec = true;" onblur="changingDec = false;">
