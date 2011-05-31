@@ -1,5 +1,7 @@
 function addOverlayObject()
 {	
+	
+	
 	var floaty = document.getElementById('floaty');
 	floaty.innerHTML += "<br />\n\
 						<img src='loader.gif' id='" + String(overlay.length) +"loader' style='opacity: 0.0'/>\n\
@@ -13,8 +15,8 @@ function addOverlayObject()
 	{
 		newMenu.appendChild(menu.children[0]);
 	}
-	floaty.innerHTML += " Color: <input type='range' id='" + String(overlay.length) + "hex' value='FF0000' onchange='updateColorForOverlay(" + String(overlay.length) + ");'/> \n\
-						 Alpha: <input type='range' id='" + String(overlay.length) + "alpha' value='100' onchange='updateAlphaForOverlay(" + String(overlay.length) + ");'/> \n\
+	floaty.innerHTML += " Color: <input type='textfield' id='" + String(overlay.length) + "hex' value='FF0000' onchange='updateColorForOverlay(" + String(overlay.length) + ");'/> \n\
+						 Alpha: <input type='textfield' id='" + String(overlay.length) + "alpha' value='100' onchange='updateAlphaForOverlay(" + String(overlay.length) + ");'/> \n\
 						 MinVal: <input type='textfield' id='" + String(overlay.length) + "keyMin' value='0.0' onchange='updateKeyMinForOverlay(" + String(overlay.length) + "); releaseMouse(null);'/> \n\
 						 MaxVal: <input type='textfield' id='" + String(overlay.length) + "keyMax' value='1.0' onchange='updateKeyMaxForOverlay(" + String(overlay.length) + "); releaseMouse(null);'/> \n\
 						 <input type='checkbox' id='" + String(overlay.length) + "visible' checked='true'/>";

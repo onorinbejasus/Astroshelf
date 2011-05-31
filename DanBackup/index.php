@@ -4,8 +4,7 @@
 <title>Spinning WebGL Box</title>
  
 <script src="MyGUIControls.js" type="text/javascript"> </script>
-<script src="J3DIMath.js" type="text/javascript"> </script>
-<script src="J3DI.js" type="text/javascript"> </script>
+<script src="CanvasMatrix.js" type="text/javascript"> </script>
 <script src="utils3d.js" type="text/javascript"> </script>
 <script src="MyObjects.js" type="text/javascript"> </script>
 <script src="MySkyControls.js" type="text/javascript"> </script>
@@ -100,6 +99,7 @@
         // Initialize
         gl = initWebGL("skycanvas", "vshader", "fshader", ["vColor", "vTexCoord", "vPosition"], [ 0, 0, 0, 1 ], 3);
  		
+ 		
         // Set some uniform variables for the shaders
         gl.uniform4f(gl.getUniformLocation(gl.program, "u_color"), 0, 1, 0, 1);
         gl.uniform3f(gl.getUniformLocation(gl.program, "lightDir"), 0, 0, 1);
@@ -113,12 +113,15 @@
         // normals, texture coords, and indices.
         gl.sphere = makeSphere(gl, 360, 178);
  
+        
+        
+ 
         // Create some matrices to use later and save their locations in the shaders
-        gl.mvMatrix = new J3DIMatrix4();
+        gl.mvMatrix = new CanvasMatrix4();
         gl.u_normalMatrixLoc = gl.getUniformLocation(gl.program, "u_normalMatrix");
-        gl.normalMatrix = new J3DIMatrix4();
+        gl.normalMatrix = new CanvasMatrix4();
         gl.u_modelViewProjMatrixLoc = gl.getUniformLocation(gl.program, "u_modelViewProjMatrix");
-        gl.mvpMatrix = new J3DIMatrix4();
+        gl.mvpMatrix = new CanvasMatrix4();
  
         // Enable all of the vertex attribute arrays.
         //gl.enableVertexAttribArray(0);
@@ -131,6 +134,8 @@
 		
         gl.bindBuffer(gl.ARRAY_BUFFER, gl.sphere.vertexObject);
         gl.vertexAttribPointer(2, 3, gl.FLOAT, false, 0, 0);
+        
+        
  
  		// Bind the index array
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, gl.sphere.triangleIndexObject);
@@ -182,7 +187,7 @@
  		
         // Set the viewport and projection matrix for the scene
         gl.viewport(0, 0, width, height);
-        gl.perspectiveMatrix = new J3DIMatrix4();
+        gl.perspectiveMatrix = new CanvasMatrix4();
         gl.perspectiveMatrix.perspective(30, width/height, 1, 3);
     }
  
@@ -218,9 +223,11 @@
  
         // Construct the model-view * projection matrix and pass it in
         gl.mvpMatrix.load(gl.mvMatrix);
-        gl.mvpMatrix.multiply(gl.perspectiveMatrix);
+        gl.mvpMatrix.multRight(gl.perspectiveMatrix);
         gl.uniformMatrix4fv(gl.u_modelViewProjMatrixLoc, false,
                             gl.mvpMatrix.getAsWebGLFloatArray());
+ 
+ 
 		
  		// Bind the index array
  		

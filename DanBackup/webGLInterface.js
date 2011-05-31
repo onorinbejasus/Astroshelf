@@ -106,7 +106,10 @@
         // Create a box. On return 'gl' contains a 'box' property with
         // the BufferObjects containing the arrays for vertices,
         // normals, texture coords, and indices.
-        gl.sphere = makeSphere(gl, 360, 178);        
+        gl.sphere = makeSphere(gl, 360, 178);
+ 
+        
+        
  
         // Create some matrices to use later and save their locations in the shaders
         gl.mvMatrix = new CanvasMatrix4();
@@ -211,13 +214,13 @@
         gl.normalMatrix.invert();
         gl.normalMatrix.transpose();
         gl.uniformMatrix4fv(gl.u_normalMatrixLoc, false,
-                            gl.normalMatrix.getAsFloat32Array());
+                            gl.normalMatrix.getAsWebGLFloatArray());
  
         // Construct the model-view * projection matrix and pass it in
         gl.mvpMatrix.load(gl.mvMatrix);
         gl.mvpMatrix.multRight(gl.perspectiveMatrix);
         gl.uniformMatrix4fv(gl.u_modelViewProjMatrixLoc, false,
-                            gl.mvpMatrix.getAsFloat32Array());
+                            gl.mvpMatrix.getAsWebGLFloatArray());
  
  
 		

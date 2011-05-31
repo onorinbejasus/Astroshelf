@@ -214,13 +214,13 @@
         gl.normalMatrix.invert();
         gl.normalMatrix.transpose();
         gl.uniformMatrix4fv(gl.u_normalMatrixLoc, false,
-                            gl.normalMatrix.getAsFloat32Array());
+                            gl.normalMatrix.getAsWebGLFloatArray());
  
         // Construct the model-view * projection matrix and pass it in
         gl.mvpMatrix.load(gl.mvMatrix);
         gl.mvpMatrix.multRight(gl.perspectiveMatrix);
         gl.uniformMatrix4fv(gl.u_modelViewProjMatrixLoc, false,
-                            gl.mvpMatrix.getAsFloat32Array());
+                            gl.mvpMatrix.getAsWebGLFloatArray());
  
  
 		

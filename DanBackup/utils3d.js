@@ -177,7 +177,7 @@ function makeBox(ctx)
     //  v2------v3
     //
     // vertex coords array
-    var vertices = new Float32Array(
+    var vertices = new WebGLFloatArray(
         [  1, 1, 1,  -1, 1, 1,  -1,-1, 1,   1,-1, 1,    // v0-v1-v2-v3 front
            1, 1, 1,   1,-1, 1,   1,-1,-1,   1, 1,-1,    // v0-v3-v4-v5 right
            1, 1, 1,   1, 1,-1,  -1, 1,-1,  -1, 1, 1,    // v0-v5-v6-v1 top
@@ -187,7 +187,7 @@ function makeBox(ctx)
     );
 
     // normal array
-    var normals = new Float32Array(
+    var normals = new WebGLFloatArray(
         [  0, 0, 1,   0, 0, 1,   0, 0, 1,   0, 0, 1,     // v0-v1-v2-v3 front
            1, 0, 0,   1, 0, 0,   1, 0, 0,   1, 0, 0,     // v0-v3-v4-v5 right
            0, 1, 0,   0, 1, 0,   0, 1, 0,   0, 1, 0,     // v0-v5-v6-v1 top
@@ -198,7 +198,7 @@ function makeBox(ctx)
 
 
     // texCoord array
-    var texCoords = new Float32Array(
+    var texCoords = new WebGLFloatArray(
         [  1, 1,   0, 1,   0, 0,   1, 0,    // v0-v1-v2-v3 front
            0, 1,   0, 0,   1, 0,   1, 1,    // v0-v3-v4-v5 right
            1, 0,   1, 1,   0, 1,   0, 0,    // v0-v5-v6-v1 top
@@ -307,15 +307,15 @@ function makeSphere(ctx, radius, lats, longs)
     
     retval.normalObject = ctx.createBuffer();
     ctx.bindBuffer(ctx.ARRAY_BUFFER, retval.normalObject);
-    ctx.bufferData(ctx.ARRAY_BUFFER, new Float32Array(normalData), ctx.STATIC_DRAW);
+    ctx.bufferData(ctx.ARRAY_BUFFER, new WebGLFloatArray(normalData), ctx.STATIC_DRAW);
 
     retval.texCoordObject = ctx.createBuffer();
     ctx.bindBuffer(ctx.ARRAY_BUFFER, retval.texCoordObject);
-    ctx.bufferData(ctx.ARRAY_BUFFER, new Float32Array(texCoordData), ctx.STATIC_DRAW);
+    ctx.bufferData(ctx.ARRAY_BUFFER, new WebGLFloatArray(texCoordData), ctx.STATIC_DRAW);
 
     retval.vertexObject = ctx.createBuffer();
     ctx.bindBuffer(ctx.ARRAY_BUFFER, retval.vertexObject);
-    ctx.bufferData(ctx.ARRAY_BUFFER, new Float32Array(geometryData), ctx.STATIC_DRAW);
+    ctx.bufferData(ctx.ARRAY_BUFFER, new WebGLFloatArray(geometryData), ctx.STATIC_DRAW);
     
     retval.numIndices = indexData.length;
     retval.indexObject = ctx.createBuffer();
@@ -473,15 +473,15 @@ function doLoadObj(obj, text)
     // set the VBOs
     obj.normalObject = obj.ctx.createBuffer();
     obj.ctx.bindBuffer(obj.ctx.ARRAY_BUFFER, obj.normalObject);
-    obj.ctx.bufferData(obj.ctx.ARRAY_BUFFER, new Float32Array(normalArray), obj.ctx.STATIC_DRAW);
+    obj.ctx.bufferData(obj.ctx.ARRAY_BUFFER, new WebGLFloatArray(normalArray), obj.ctx.STATIC_DRAW);
 
     obj.texCoordObject = obj.ctx.createBuffer();
     obj.ctx.bindBuffer(obj.ctx.ARRAY_BUFFER, obj.texCoordObject);
-    obj.ctx.bufferData(obj.ctx.ARRAY_BUFFER, new Float32Array(textureArray), obj.ctx.STATIC_DRAW);
+    obj.ctx.bufferData(obj.ctx.ARRAY_BUFFER, new WebGLFloatArray(textureArray), obj.ctx.STATIC_DRAW);
 
     obj.vertexObject = obj.ctx.createBuffer();
     obj.ctx.bindBuffer(obj.ctx.ARRAY_BUFFER, obj.vertexObject);
-    obj.ctx.bufferData(obj.ctx.ARRAY_BUFFER, new Float32Array(vertexArray), obj.ctx.STATIC_DRAW);
+    obj.ctx.bufferData(obj.ctx.ARRAY_BUFFER, new WebGLFloatArray(vertexArray), obj.ctx.STATIC_DRAW);
     
     obj.numIndices = indexArray.length;
     obj.indexObject = obj.ctx.createBuffer();
@@ -508,8 +508,7 @@ function loadImageTexture(ctx, url)
 function doLoadImageTexture(ctx, image, texture)
 {
     ctx.bindTexture(ctx.TEXTURE_2D, texture);
-    ctx.texImage2D(ctx.TEXTURE_2D, 0, ctx.RGBA, ctx.RGBA,
-                                      ctx.UNSIGNED_BYTE, image)
+    ctx.texImage2D(ctx.TEXTURE_2D, 0, image);
     ctx.texParameteri(ctx.TEXTURE_2D, ctx.TEXTURE_MAG_FILTER, ctx.LINEAR);
     ctx.texParameteri(ctx.TEXTURE_2D, ctx.TEXTURE_MIN_FILTER, ctx.LINEAR);
     ctx.texParameteri(ctx.TEXTURE_2D, ctx.TEXTURE_WRAP_S, ctx.CLAMP_TO_EDGE);

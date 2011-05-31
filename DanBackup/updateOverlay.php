@@ -104,12 +104,24 @@
 		else
 		{
 			//Encode the information into a 32-bit unsigned integer
-			$colorRGB = 16777215 * ((float)$row[$_GET['keyVal']] - (float)$_GET['keyMin'])/(float)$range;
+
+			/*
+			//Uncomment these lines for 31 bit precision
+			$colorRGBA = 2147483647 * ((float)$row[$_GET['keyVal']] - (float)$_GET['keyMin'])/(float)$range;
 			//Use bit shifting to encode the information into the Red, Green, Blue, and Alpha channels
-			$colorR = ($colorRGB & 16711680) >> 16;
-			$colorG = ($colorRGB & 65280) >> 8;
-			$colorB = ($colorRGB & 255);
-			$colorA = 0;
+			$colorR = $colorRGBA >> 23;
+			$colorG = ($colorRGBA << 8) >> 23;
+			$colorB = ($colorRGBA << 16) >> 23;
+			$colorA = ($colorRGBA << 24) >> 23;
+			*/
+
+			//Encode into alpha channel with 7 bits of precision
+			$colorR = 0;
+			$colorG = 0;
+			$colorB = 0;
+			$colorA = 127 * ((float)$row[$_GET['keyVal']] - (float)$_GET['keyMin'])/(float)$range;
+
+
 			//Put the finite information into the picture to be returned to the client
 			$color = imagecolorallocatealpha($im, $colorR, $colorG, $colorB, $colorA);
 		}
@@ -117,12 +129,12 @@
 		imagesetpixel($im, $pixLon * $width, $height - ($pixLat * $height), $color);
 		imagecolordeallocate($im, $color);
 	}
-	
+	/*
 	//Uncomment this to do a test in the top left corner
 	$color = imagecolorallocatealpha($im, 255, 255, 255, 126);
 	imagesetpixel($im, 0, 0, $color);
 	imagecolordeallocate($im, $color);
-	
+	*/
 	//Send highly compressed PNG image to the client
 	imagepng($im, NULL, 9, PNG_ALL_FILTERS);
 
